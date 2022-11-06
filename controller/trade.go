@@ -63,7 +63,7 @@ func TradeCheck(ctx iris.Context) {
 	ctx.JSON(response)
 }
 
-func tenderlySimulate(from, to, data, gasStr, valueStr string) {
+func tenderlySimulate(from, to, data, gasStr, valueStr string) *model.SimulateResponse {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{
 			InsecureSkipVerify: true,
@@ -94,6 +94,10 @@ func tenderlySimulate(from, to, data, gasStr, valueStr string) {
 		log.Fatal(err)
 	}
 	defer resp.Body.Close()
+
+	var simResult model.SimulateResponse
+	json.NewDecoder(resp.Body).Decode(&simResult)
+	return &simResult
 }
 
 func Hello(ctx iris.Context) {
